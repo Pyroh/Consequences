@@ -40,12 +40,22 @@ public extension Sequence {
     }
 }
 
+
+
 public extension Sequence {
     @inlinable func filter<T: Equatable>(on key: KeyPath<Element, T>, equalTo value: T) -> [Element] {
         filter { $0[keyPath: key] == value }
     }
     
     @inlinable func filter<T: Equatable>(on key: KeyPath<Element, T>, notEqualTo value: T) -> [Element] {
+        filter { $0[keyPath: key] != value }
+    }
+    
+    @inlinable func filter<T: Equatable>(on key: KeyPath<Element, T?>, equalTo value: T) -> [Element] {
+        filter { $0[keyPath: key] == value }
+    }
+    
+    @inlinable func filter<T: Equatable>(on key: KeyPath<Element, T?>, notEqualTo value: T) -> [Element] {
         filter { $0[keyPath: key] != value }
     }
     
@@ -127,6 +137,14 @@ public extension Sequence {
     @inlinable func filter<S: StringProtocol>(on key: KeyPath<Element, String>, localizedStandardContains substring: S, containsEmpty flag: Bool = true) -> [Element] {
         guard !(substring.isEmpty && flag) else { return .init(self) }
         return filter { $0[keyPath: key].localizedStandardContains(substring) }
+    }
+}
+
+public extension Sequence {
+    @inlinable func filter(using predicates: [Predicate<Element>]) -> [Element] {
+        predicates.reduce([Element](self)) { partialResult, predicate in
+            predicate.apply(to: partialResult)
+        }
     }
 }
 

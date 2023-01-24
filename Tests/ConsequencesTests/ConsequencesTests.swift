@@ -1,6 +1,48 @@
 import XCTest
 @testable import Consequences
 
+struct OPT: ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral, ExpressibleByNilLiteral, Equatable {
+    let value: Double?
+    
+    var amount: Double { value ?? 0 }
+    
+    init(_ value: Double?) {
+        self.value = value
+    }
+    
+    init(integerLiteral value: IntegerLiteralType) {
+        self.value = Double(value)
+    }
+    
+    init(floatLiteral value: FloatLiteralType) {
+        self.value = Double(value)
+    }
+    
+    init(nilLiteral: ()) {
+        self.value = nil
+    }
+    
+    static func ==(lhs: Self, rhs: Self) -> Bool {
+        lhs.value == rhs.value
+    }
+}
+
+struct PT: ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral, Equatable {
+    let value: Double
+    
+    init(_ value: Double) {
+        self.value = value
+    }
+    
+    init(integerLiteral value: IntegerLiteralType) {
+        self.value = Double(value)
+    }
+    
+    init(floatLiteral value: FloatLiteralType) {
+        self.value = Double(value)
+    }
+}
+
 final class ConsequencesTests: XCTestCase {
     func testZip3() {
         let s1 = Array(repeating: 1, count: 2)
@@ -25,7 +67,14 @@ final class ConsequencesTests: XCTestCase {
         
         XCTAssert(z1.map { $0 == (1, 2, 3, 4) }.allTrue())
         XCTAssert(z2.map { $0 == (1, 2, 3, 4) }.allTrue())
-        
-        s1.last(where: { $0 == 1 })
+    }
+    
+    func testOptionalPredicates() {
+        let s = [OPT](arrayLiteral: 1, 2, nil, nil, 5, nil, 7)
+        XCTAssert(s.filter(using: [.onNotNil(\.value)]) == [1, 2, 5, 7])
+        XCTAssert(s.filter(using: [.onNil(\.value)]) == [nil, nil, nil])
+        XCTAssert(s.filter(using: [.onNotNil(\.value), .on(\.amount, lessThan: 2)]) == [1])
+        XCTAssert(s.filter(using: [.onNotNil(\.value), .on(\.amount, lessThanOrEqualTo: 2)]) == [1, 2])
+        XCTAssert(s.filter(using: [.onNotNil(\.value), .on(\.amount, equalTo: 3)]).isEmpty)
     }
 }
