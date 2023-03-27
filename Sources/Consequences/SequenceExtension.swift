@@ -138,6 +138,21 @@ public extension Sequence {
         guard !(substring.isEmpty && flag) else { return .init(self) }
         return filter { $0[keyPath: key].localizedStandardContains(substring) }
     }
+    
+    @inlinable func filter<S: StringProtocol>(on key: KeyPath<Element, String?>, contains substring: S, containsEmpty flag: Bool = true) -> [Element] {
+        guard !(substring.isEmpty && flag) else { return .init(self) }
+        return filter { $0[keyPath: key]?.contains(substring) ?? false }
+    }
+    
+    @inlinable func filter<S: StringProtocol>(on key: KeyPath<Element, String?>, localizedCaseInsensitiveContains substring: S, containsEmpty flag: Bool = true) -> [Element] {
+        guard !(substring.isEmpty && flag) else { return .init(self) }
+        return filter { $0[keyPath: key]?.localizedCaseInsensitiveContains(substring) ?? false }
+    }
+    
+    @inlinable func filter<S: StringProtocol>(on key: KeyPath<Element, String?>, localizedStandardContains substring: S, containsEmpty flag: Bool = true) -> [Element] {
+        guard !(substring.isEmpty && flag) else { return .init(self) }
+        return filter { $0[keyPath: key]?.localizedStandardContains(substring) ?? false }
+    }
 }
 
 public extension Sequence {
