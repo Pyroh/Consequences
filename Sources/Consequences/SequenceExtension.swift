@@ -156,14 +156,6 @@ public extension Sequence {
 }
 
 public extension Sequence {
-    @inlinable func filter(using predicates: [Predicate<Element>]) -> [Element] {
-        predicates.reduce([Element](self)) { partialResult, predicate in
-            predicate.apply(to: partialResult)
-        }
-    }
-}
-
-public extension Sequence {
     @inlinable func first<T: Equatable>(where key: KeyPath<Element, T>, equalTo value: T) -> Element? {
         first { $0[keyPath: key] == value }
     }

@@ -27,6 +27,8 @@
 
 import Foundation
 
+@_exported import Collections
+
 public extension Collection {
     @inlinable func firstIndex<T: Equatable>(where key: KeyPath<Element, T>, equalTo value: T) -> Index? {
         firstIndex { $0[keyPath: key] == value }

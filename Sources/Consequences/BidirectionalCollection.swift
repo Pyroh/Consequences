@@ -25,6 +25,8 @@
 //  SOFTWARE.
 //
 
+import Foundation
+
 public extension BidirectionalCollection {
     @inlinable func lastIndex<T: Equatable>(where key: KeyPath<Element, T>, equalTo value: T) -> Index? {
         lastIndex { $0[keyPath: key] == value }

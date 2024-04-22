@@ -81,6 +81,9 @@ extension Zip3Sequence: Sequence {
     }
     
     @inlinable public var underestimatedCount: Int {
-        Swift.min(Swift.min(sequence1.underestimatedCount, sequence2.underestimatedCount), sequence3.underestimatedCount)
+        Swift.min(
+            Swift.min(sequence1.underestimatedCount, sequence2.underestimatedCount),
+            sequence3.underestimatedCount)
     }
 }
+

@@ -68,13 +68,4 @@ final class ConsequencesTests: XCTestCase {
         XCTAssert(z1.map { $0 == (1, 2, 3, 4) }.allTrue())
         XCTAssert(z2.map { $0 == (1, 2, 3, 4) }.allTrue())
     }
-    
-    func testOptionalPredicates() {
-        let s = [OPT](arrayLiteral: 1, 2, nil, nil, 5, nil, 7)
-        XCTAssert(s.filter(using: [.onNotNil(\.value)]) == [1, 2, 5, 7])
-        XCTAssert(s.filter(using: [.onNil(\.value)]) == [nil, nil, nil])
-        XCTAssert(s.filter(using: [.onNotNil(\.value), .on(\.amount, lessThan: 2)]) == [1])
-        XCTAssert(s.filter(using: [.onNotNil(\.value), .on(\.amount, lessThanOrEqualTo: 2)]) == [1, 2])
-        XCTAssert(s.filter(using: [.onNotNil(\.value), .on(\.amount, equalTo: 3)]).isEmpty)
-    }
 }
