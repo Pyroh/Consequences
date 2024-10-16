@@ -70,3 +70,25 @@ public extension RangeReplaceableCollection {
         removeAll(where: key, equalTo: false)
     }
 }
+
+public extension RangeReplaceableCollection {
+    @inlinable static func +(lhs: Self, rhs: Self.Element) -> Self {
+        var ret = lhs
+        ret.append(rhs)
+        return ret
+    }
+    
+    @inlinable static func +<S>(lhs: Self, rhs: S) -> Self where S: Sequence, S.Element == Element {
+        var ret = lhs
+        ret.append(contentsOf: rhs)
+        return ret
+    }
+    
+    @inlinable static func +=(lhs: inout Self, rhs: Self.Element) {
+        lhs.append(rhs)
+    }
+    
+    @inlinable static func +<S>(lhs: inout Self, rhs: S) where S: Sequence, S.Element == Element {
+        lhs.append(contentsOf: rhs)
+    }
+}
