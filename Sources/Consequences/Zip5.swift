@@ -25,11 +25,24 @@
 //  SOFTWARE.
 //
 
-@inlinable public func zip5<Sequence1: Sequence, Sequence2: Sequence, Sequence3: Sequence, Sequence4: Sequence>(
-    _ sequence1: Sequence1, _ sequence2: Sequence2, _ sequence3: Sequence3, _ sequence4: Sequence4) -> Zip4Sequence<Sequence1, Sequence2, Sequence3, Sequence4> {
-        Zip4Sequence(sequence1, sequence2, sequence3, sequence4)
-    }
+/// Creates a sequence of tuples where the elements of each tuple are corresponding elements of five underlying sequences.
+///
+/// - Parameters:
+///   - sequence1: The first sequence to zip.
+///   - sequence2: The second sequence to zip.
+///   - sequence3: The third sequence to zip.
+///   - sequence4: The fourth sequence to zip.
+///   - sequence5: The fifth sequence to zip.
+/// - Returns: A `Zip5Sequence` of the five input sequences.
+///
+/// - Complexity: O(1)
+@inlinable public func zip5<Sequence1: Sequence, Sequence2: Sequence, Sequence3: Sequence, Sequence4: Sequence, Sequence5: Sequence>(
+    _ sequence1: Sequence1, _ sequence2: Sequence2, _ sequence3: Sequence3, _ sequence4: Sequence4, _ sequence5: Sequence5
+) -> Zip5Sequence<Sequence1, Sequence2, Sequence3, Sequence4, Sequence5> {
+    Zip5Sequence(sequence1, sequence2, sequence3, sequence4, sequence5)
+}
 
+/// A sequence of tuples built out of five underlying sequences.
 @frozen public struct Zip5Sequence<Sequence1: Sequence, Sequence2: Sequence, Sequence3: Sequence, Sequence4: Sequence, Sequence5: Sequence> {
     @usableFromInline let sequence1: Sequence1
     @usableFromInline let sequence2: Sequence2
@@ -37,6 +50,14 @@
     @usableFromInline let sequence4: Sequence4
     @usableFromInline let sequence5: Sequence5
     
+    /// Creates a new `Zip5Sequence` from five sequences.
+    ///
+    /// - Parameters:
+    ///   - sequence1: The first sequence to zip.
+    ///   - sequence2: The second sequence to zip.
+    ///   - sequence3: The third sequence to zip.
+    ///   - sequence4: The fourth sequence to zip.
+    ///   - sequence5: The fifth sequence to zip.
     @inlinable init(_ sequence1: Sequence1,
                     _ sequence2: Sequence2,
                     _ sequence3: Sequence3,
@@ -51,6 +72,7 @@
 }
 
 extension Zip5Sequence {
+    /// An iterator for a `Zip5Sequence`.
     @frozen public struct Iterator {
         @usableFromInline var iterator1: Sequence1.Iterator
         @usableFromInline var iterator2: Sequence2.Iterator
@@ -60,6 +82,14 @@ extension Zip5Sequence {
         
         @usableFromInline var reachedEnd: Bool = false
         
+        /// Creates a new iterator from the iterators of five sequences.
+        ///
+        /// - Parameters:
+        ///   - iterator1: The iterator of the first sequence.
+        ///   - iterator2: The iterator of the second sequence.
+        ///   - iterator3: The iterator of the third sequence.
+        ///   - iterator4: The iterator of the fourth sequence.
+        ///   - iterator5: The iterator of the fifth sequence.
         @inlinable init(_ iterator1: Sequence1.Iterator,
                         _ iterator2: Sequence2.Iterator,
                         _ iterator3: Sequence3.Iterator,
@@ -77,6 +107,11 @@ extension Zip5Sequence {
 extension Zip5Sequence.Iterator: IteratorProtocol {
     public typealias Element = (Sequence1.Element, Sequence2.Element, Sequence3.Element, Sequence4.Element, Sequence5.Element)
     
+    /// Advances to the next element and returns it, or `nil` if no next element exists.
+    ///
+    /// - Returns: The next element of the underlying sequences as a tuple, or `nil` if any sequence has been exhausted.
+    ///
+    /// - Complexity: O(1)
     @inlinable mutating public func next() -> (Sequence1.Element, Sequence2.Element, Sequence3.Element, Sequence4.Element, Sequence5.Element)? {
         if reachedEnd { return nil }
         guard let item1 = iterator1.next(),
@@ -96,6 +131,9 @@ extension Zip5Sequence.Iterator: IteratorProtocol {
 extension Zip5Sequence: Sequence {
     public typealias Element = (Sequence1.Element, Sequence2.Element, Sequence3.Element, Sequence4.Element, Sequence5.Element)
     
+    /// Returns an iterator over the elements of this sequence.
+    ///
+    /// - Returns: An iterator that yields tuples of corresponding elements from the five underlying sequences.
     @inlinable public func makeIterator() -> Iterator {
         .init(sequence1.makeIterator(),
               sequence2.makeIterator(),
@@ -104,6 +142,9 @@ extension Zip5Sequence: Sequence {
               sequence5.makeIterator())
     }
     
+    /// The minimum number of elements that the sequence can produce without blocking or accessing async APIs.
+    ///
+    /// - Returns: The minimum of the `underestimatedCount` properties of the five underlying sequences.
     @inlinable public var underestimatedCount: Int {
         Swift.min(
             Swift.min(
@@ -114,4 +155,3 @@ extension Zip5Sequence: Sequence {
         )
     }
 }
-
