@@ -859,20 +859,31 @@ public extension Sequence {
 public extension Sequence {
     /// Returns a new array with the elements of the sequence sorted based on the specified key path.
     ///
-    /// - Parameter key: A key path to a property of the element that conforms to `Comparable`.
+    /// - **Parameters**:
+    ///   - key: A key path to a property of the element that conforms to `Comparable`.
+    ///   - descending: If `true`, sorts in descending order. If `false`, sorts in ascending order.
+    ///                Default is `false`.
     ///
-    /// - Returns: A new array with the elements sorted based on the values of the specified key path.
+    /// - **Returns**: A new array with the elements sorted based on the values of the specified key path.
     ///
-    /// - Complexity: O(n log n), where n is the length of the sequence.
+    /// - **Complexity**: O(n log n), where n is the length of the sequence.
     ///
     /// - Example:
     ///   ```swift
     ///   struct Person { let name: String, let age: Int }
     ///   let people = [Person(name: "Alice", age: 30), Person(name: "Bob", age: 25)]
-    ///   let sortedPeople = people.sorted(by: \.age)
-    ///   // sortedPeople is [Person(name: "Bob", age: 25), Person(name: "Alice", age: 30)]
+    ///
+    ///   // Ascending order (default)
+    ///   let sortedAscending = people.sorted(by: \.age)
+    ///   // [Person(name: "Bob", age: 25), Person(name: "Alice", age: 30)]
+    ///
+    ///   // Descending order
+    ///   let sortedDescending = people.sorted(by: \.age, descending: true)
+    ///   // [Person(name: "Alice", age: 30), Person(name: "Bob", age: 25)]
     ///   ```
-    @inlinable func sorted<T: Comparable>(by key: KeyPath<Element, T>) -> [Element] {
+    @inlinable func sorted<T: Comparable>(by key: KeyPath<Element, T>, descending flag: Bool = false) -> [Element] {
+        flag ?
+        sorted { (lhs, rhs) -> Bool in lhs[keyPath: key] > rhs[keyPath: key] } :
         sorted { (lhs, rhs) -> Bool in lhs[keyPath: key] < rhs[keyPath: key] }
     }
     

@@ -30,17 +30,28 @@ import Foundation
 extension MutableCollection where Self: RandomAccessCollection {
     /// Sorts the collection in place using a key path to a comparable property.
     ///
-    /// - Parameter key: A key path to a property of the element that conforms to `Comparable`.
+    /// - **Parameters**:
+    ///   - key: A key path to a property of the element that conforms to `Comparable`.
+    ///   - descending: If `true`, sorts in descending order. If `false`, sorts in ascending order.
+    ///                Default is `false`.
     ///
-    /// - Complexity: O(n log n), where n is the length of the collection.
+    /// - **Complexity**: O(n log n), where n is the length of the collection.
     ///
     /// - Example:
     ///   ```swift
     ///   var people = [Person(name: "Alice", age: 30), Person(name: "Bob", age: 25)]
+    ///
+    ///   // Ascending order (default)
     ///   people.sort(by: \.age)
-    ///   // people is now sorted by age in ascending order
+    ///   // people is now [Bob(age: 25), Alice(age: 30)]
+    ///
+    ///   // Descending order
+    ///   people.sort(by: \.age, descending: true)
+    ///   // people is now [Alice(age: 30), Bob(age: 25)]
     ///   ```
-    @inlinable mutating func sort<T: Comparable>(by key: KeyPath<Element, T>) {
+    @inlinable mutating func sort<T: Comparable>(by key: KeyPath<Element, T>, descending flag: Bool = false) {
+        flag ?
+        sort { (lhs, rhs) -> Bool in lhs[keyPath: key] > rhs[keyPath: key] } :
         sort { (lhs, rhs) -> Bool in lhs[keyPath: key] < rhs[keyPath: key] }
     }
     
